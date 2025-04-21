@@ -12,27 +12,28 @@ class CreateNoteTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $browser->visit('http://127.0.0.1:8000/login')
-                ->type('email', 'testuser@example.com') // Ganti dengan email user terdaftar
-                ->type('password', 'password123')       // Ganti juga passwordnya
-                ->press('LOG IN')                         // Teks tombol login
-                ->assertPathIs('/dashboard')             // Atau path setelah login
+                ->type('email', 'testuser@example.com') // Memasukan email yang telah terdaftar
+                ->type('password', 'password123')       // Begitu pun password nya
+                ->press('LOG IN')                         // Tekan tombol login
+                ->assertPathIs('/dashboard')             // Cek apakah sudah di dashboard
+                
+                // Masuk ke menu Notes
+                ->clickLink('Notes')                     // Klik menu Notes di navbar
+                ->assertPathIs('/notes')                 // Cek apakah sudah di halaman notes
 
-                // Buka menu Notes
-                ->clickLink('Notes')                     // Atau bisa pakai selector, tergantung navbar kamu
-                ->assertPathIs('/notes')                 // Cek halaman Notes
+                // Klik tombol untuk membuat note baru
+                ->clickLink('Create Note')                   // Klik tombol Create Note
 
-                // Buka form Create Note
-                ->press('Create Note')                   // Tombol untuk buat note baru
-
-                // Isi form note
-                ->type('title', 'Catatan Uji Coba')      // Sesuaikan name/ID input
-                ->type('description', 'Ini adalah isi dari catatan ujicoba Laravel Dusk.')
+                // Sekarang masuk ke URL create-note
+                ->type('title', 'Catatan Uji Coba')      // Isi judul catatan
+                ->type('description', 'Ini adalah isi dari catatan ujicoba Laravel Dusk.') // Isi deskripsi catatan
 
                 // Submit form
-                ->press('CREATE')                        // Tombol submit
+                ->press('CREATE')                        // Tekan tombol CREATE untuk menyimpan catatan
 
-                // Verifikasi berhasil
-                ->assertSee('Catatan Uji Coba');         // Pastikan note muncul
+                // Cek hasilnya
+                ->assertPathIs('/notes')                 // Pastikan kembali ke halaman notes
+                ->assertSee('Catatan Uji Coba');         // Cek apakah catatan baru muncul di daftar catatan
         });
     }
 }
